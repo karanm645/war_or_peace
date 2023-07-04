@@ -55,6 +55,19 @@ class Deck
   def removed_card
     #remove top card --> shift + 1st one
     first_card = @cards_array.shift(1)
+
     return first_card.pop # remove from array
+  end 
+
+  def remove_three_cards
+    card_holder = []
+    3.times { card_holder << @cards_array.shift(1)}
+
+    return card_holder.flatten
+  end 
+
+  def mod_remove_three_cards
+    3.times do @cards_array.shift(1)
+    end 
   end 
 end 
