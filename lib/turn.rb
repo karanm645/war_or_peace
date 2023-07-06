@@ -18,14 +18,6 @@ class Turn
     end 
   end 
 
-  def first_card_equal
-    player1.deck.rank_of_card_at(0) == player2.deck.rank_of_card_at(0)
-  end 
-
-  def third_card_equal
-    player1.deck.rank_of_card_at(2) == player2.deck.rank_of_card_at(2)
-  end 
-
   def winner 
     if type == :basic 
       basic_winner
@@ -34,9 +26,37 @@ class Turn
     elsif type == :mutually_assured_destruction
       "No Winner"
     end 
-
   end 
 
+  def pile_cards
+    if type == :basic 
+      basic_pile
+    elsif type == :war 
+      war_pile 
+    elsif type == :mutually_assured_destruction
+      mad_pile_remove
+    end 
+  end 
+
+  def award_spoils(winner)
+    pile_cards.each do |card|
+      winner.deck.cards_array << card
+    end 
+  end 
+
+  #### helper methods ###############
+
+  # *type helper methods
+  def first_card_equal
+    player1.deck.rank_of_card_at(0) == player2.deck.rank_of_card_at(0)
+  end 
+
+  def third_card_equal
+    player1.deck.rank_of_card_at(2) == player2.deck.rank_of_card_at(2)
+  end
+  #
+
+  # *winner helper methods
   def basic_winner
     if player1.deck.rank_of_card_at(0) > player2.deck.rank_of_card_at(0)
       player1
@@ -52,17 +72,9 @@ class Turn
       player2 
     end 
   end 
+  #
 
-  def pile_cards
-    if type == :basic 
-      basic_pile
-    elsif type == :war 
-      war_pile 
-    elsif type == :mutually_assured_destruction
-      mod_pile_remove
-    end 
-  end 
-
+  # pile cards helper methods
   def basic_pile
     spoils_of_war.push(player1.deck.removed_card, player2.deck.removed_card) 
   end 
@@ -72,14 +84,9 @@ class Turn
   pile.flatten!
   end 
 
-  def mod_pile_remove
-    player1.deck.mod_remove_three_cards
-    player2.deck.mod_remove_three_cards
+  def mad_pile_remove
+    player1.deck.mad_remove_three_cards
+    player2.deck.mad_remove_three_cards
   end 
-
-  def award_spoils(winner)
-    pile_cards.each do |card|
-      winner.deck.cards_array << card
-    end 
-  end 
+  #
 end 
